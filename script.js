@@ -1,21 +1,33 @@
-function appendToDisplay(value) {
-  document.getElementById('display').value += value;
-}
+// script.js
+const display = document.getElementById('display');
+const buttons = document.querySelectorAll('.btn');
 
-function clearDisplay() {
-  document.getElementById('display').value = '';
-}
+let currentInput = '';
+let resultDisplayed = false;
 
-function deleteLast() {
-  const display = document.getElementById('display');
-  display.value = display.value.slice(0, -1);
-}
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    const value = button.getAttribute('data-value');
 
-function calculate() {
-  const display = document.getElementById('display');
-  try {
-    display.value = eval(display.value);
-  } catch (error) {
-    display.value = 'Error';
-  }
-}
+    if (button.id === 'clear') {
+      currentInput = '';
+      display.value = '';
+    } else if (button.id === 'equals') {
+      try {
+        currentInput = eval(currentInput).toString();
+        display.value = currentInput;
+        resultDisplayed = true;
+      } catch {
+        display.value = 'Error';
+      }
+    } else {
+      if (resultDisplayed && !isNaN(value)) {
+        currentInput = value;
+        resultDisplayed = false;
+      } else {
+        currentInput += value;
+      }
+      display.value = currentInput;
+    }
+  });
+});
